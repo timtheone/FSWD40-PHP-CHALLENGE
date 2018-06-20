@@ -15,28 +15,8 @@
 
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">Rent24</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarNav">
-    <ul class="navbar-nav">
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Destination</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Cars</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link disabled" href="#">Offers</a>
-      </li>
-    </ul>
-  </div>
-</nav>
+<!-- Include navbar -->
+<?php include('navbar.php') ?>
 
 <div class="jumbotron jumbotron-fluid">
   <div class="container">
@@ -56,21 +36,23 @@
             <label for="password">Password</label>
             <input type="password" class="form-control" id="password" placeholder="Password">
           </div>
-          <button type="submit" class="btn btn-primary">Log in</button>
+          <input type="submit" class="btn btn-primary" value="Log in">
+          <button type="button" class="btn btn-light float-right"><a href="#">Register</a></button>
         </form>
       </div>
     </div>
   </div>
 </div>
 
+<!-- Include footer -->
+<?php include('footer.php') ?>
+
+<?php
+include("connect.php");
 
 
-	<?php
-	include("connect.php");
-	
-	
 
-	?>
+?>
 
 
 </body>

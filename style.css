@@ -5,3 +5,15 @@
     padding-bottom: 200px;
     color: white;
 }
+
+a {
+    color: black;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+.white-navbar {
+    background-color: white;
+}
