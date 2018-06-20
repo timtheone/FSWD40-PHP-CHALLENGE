@@ -1,3 +1,7 @@
 .jumbotron{
-background-image: url('https://images.pexels.com/photos/120049/pexels-photo-120049.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260');
+    background-image: url('https://images.pexels.com/photos/120049/pexels-photo-120049.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260');
+    background-size: cover;
+    padding-top: 200px;
+    padding-bottom: 200px;
+    color: white;
 }

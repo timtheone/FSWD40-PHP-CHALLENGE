@@ -40,8 +40,26 @@
 
 <div class="jumbotron jumbotron-fluid">
   <div class="container">
-    <h1 class="display-4">Car Rental for your purpose</h1>
-    <p class="lead">Check out our new cars and get an account and get a lot of benefits! Join today.</p>
+    <div class="row">
+      <div class="description_text col-lg-5 col-md-5 col-sm-5 col-xs-5">
+        <h1 class="display-4">Car Rental for your purpose</h1>
+        <p class="lead">Check out our new cars and get an account and get a lot of benefits! Join today.</p>
+      </div>
+      <div class="form-wrapper col-lg-5 col-md-5 col-sm-5 col-xs-5 offset-lg-2 offset-sm-2 offset-md-2 offset-xs-2">
+        <h4 class="text-center">Log In</h4>
+        <form>
+          <div class="form-group">
+            <label for="Username">Username</label>
+            <input type="email" class="form-control" id="Username" placeholder="John123">
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="password" placeholder="Password">
+          </div>
+          <button type="submit" class="btn btn-primary">Log in</button>
+        </form>
+      </div>
+    </div>
   </div>
 </div>
 
