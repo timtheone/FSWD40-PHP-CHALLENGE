@@ -1,8 +1,13 @@
 <?php
 
 $username = "timuralmamedov";
-$servername = "localhost";
-$password = "fkvfvtljd__93";
+$servername = "root";
+$password = "";
 $dbname = "rent";
+
+define ('ROOT', 'http://localhost/php_exercises/FSWD40-PHP_CHALLENGE/');
+
+$conn = mysqli_connect($servername, $username, $password, $dbname);
+
 
 ?>
