@@ -1,166 +1,232 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Car Rental Service</title>
-	
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
-	<link rel="stylesheet" href="style.css">
-	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+<!-- Include navbar + head tag -->
+<?php include('navbar.php') ?>
 
-</head>
+<?php 
+ob_start();
+session_start();
+if( isset($_SESSION['user'])!=""){
+  header("Location: ".ROOT_URL."index.php");
+}
+$user_nameError = '';
+$emailError = '';
+$passError = '';
+$carLicenceError = '';
+$fnameError = '';
+$snameError = '';
+$adressError = '';
+$birthdayError = '';
+$error = false;
+if(isset($_POST['submit-btn'])) {
 
-<body>
+  $user_name = trim($_POST['user_name']);
+  $user_name = strip_tags($user_name);
+  $user_name = htmlspecialchars($user_name);
+  
+  $email = trim($_POST['email']);
+  $email = strip_tags($email);
+  $email = htmlspecialchars($email);
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">Rent24</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarNav">
-    <ul class="navbar-nav">
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Destination</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Cars</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link disabled" href="#">Offers</a>
-      </li>
-    </ul>
+  $pass = trim($_POST['pass']);
+  $pass = strip_tags($pass);
+  $pass = htmlspecialchars($pass);
+
+  $fname = trim($_POST['first_name']);
+  $fname = strip_tags($fname);
+  $fname = htmlspecialchars($fname);
+
+  $sname = trim($_POST['last_name']);
+  $sname = strip_tags($sname);
+  $sname = htmlspecialchars($sname);
+
+  $birthday = trim($_POST['birthday']);
+  $birthday = strip_tags($birthday);
+  $birthday = htmlspecialchars($birthday);
+
+  $carLicence = trim($_POST['carLicence']);
+  $carLicence = strip_tags($carLicence);
+  $carLicence = htmlspecialchars($carLicence);
+  $carLicence = (int)$carLicence;
+
+  $address = trim($_POST['address']);
+  $address = strip_tags($address);
+  $address = htmlspecialchars($address);
+  
+  
+  // basic name validation
+ if (empty($user_name)) {
+  $error = true;
+  $user_nameError = "Please enter your full User name.";
+ } else if (strlen($user_name) < 3) {
+  $error = true;
+  $user_nameError = "User name must have at least 3 characters.";
+ } else if (!preg_match('/^(?=.*\d)(?=.*[A-Za-z])[0-9A-Za-z!@#$%]{6,32}$/',$user_name)) {
+  $error = true;
+  $user_nameError = "Name must contain at least 1 number and 1 letter and be between 6-32 characters long.";
+ }
+
+ //basic email validation
+ if ( !filter_var($email,FILTER_VALIDATE_EMAIL) ) {
+  $error = true;
+  $emailError = "Please enter valid email address.";
+ } else {
+  // check whether the email exist or not
+  $query = "SELECT email FROM driver WHERE email='$email'";
+  $result = mysqli_query($conn, $query);
+  $count = mysqli_num_rows($result);
+  if($count!=0){
+   $error = true;
+   $emailError = "Provided Email is already in use.";
+  }
+ }
+ // password validation
+ if (empty($pass)){
+  $error = true;
+  $passError = "Please enter password.";
+ } else if(strlen($pass) < 6) {
+  $error = true;
+  $passError = "Password must have atleast 6 characters.";
+ }
+
+//  if (empty($fname || $sname || $birthday || $carLicence || $address)) {
+//    $error = true;
+//    $fieldError = "Please fill in this field";
+//  }
+
+if (empty($fname)) {
+  $error = true;
+  $fnameError = "Please enter your Name";
+} 
+if(empty($sname)) {
+  $error = true;
+  $snameError = "Please enter your Last Name";
+} 
+if(empty($birthday)) {
+  $error = true;
+  $birthdayError = "Please enter your date of birth";
+} 
+if(empty($carLicence)) {
+  $error = true;
+  $carLicenceError = "Please enter your licence number";
+} 
+if(empty($address)) {
+  $error = true;
+  $adressError = "Please enter your address";
+}
+ 
+
+
+$password = hash('sha256', $pass);
+// $password = password_hash($pass, PASSWORD_DEFAULT);
+
+
+
+if( !$error ) {
+  $sql = "INSERT INTO driver(driver_user_name,email,driver_password,first_name,last_name,birthday,CarLicence,adress)
+          VALUES ('$user_name', '$email', '$password', '$fname', '$sname', '$birthday','$carLicence', '$address')";      
+  $res = mysqli_query($conn, $sql);
+
+  if ($res) {
+    $errTyp = "success";
+    $errMSG = "Successfully registered, you may login now";
+    unset($user_name);
+    unset($email);
+    unset($pass);
+    unset($fname);
+    unset($sname);
+    unset($address);
+    unset($carLicence);
+    unset($birthday);
+  } else {
+    $errTyp = "danger";
+    $errMSG = "Something went wrong";
+  }
+}
+
+}
+?>
+<div class="container">
+  <h3 class="text-center" id="form-heading">Register now</h3>
+  <form method="POST" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" autocomplete="off" class="col-lg-8 offset-lg-2" id="form-reg">
+<?php
+if ( isset($errMSG) ) {
+ ?>
+  <div class="alert alert-<?php echo $errTyp ?>">
+                  <?php echo $errMSG; ?>
   </div>
-</nav>
 
-<br>
-<h1>Welcome to our awesome community</h1>
-
-<h3>Fill in the form</h3>
-
-<br>
-
-<div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
-  <div class="carousel-inner">
-    <div class="carousel-item active">
-      <img class="d-block w-100" src="https://images.pexels.com/photos/113176/pexels-photo-113176.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" alt="First slide">
-    </div>
-    <div class="carousel-item">
-      <img class="d-block w-100" src="https://images.pexels.com/photos/539858/pexels-photo-539858.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" alt="Second slide">
-    </div>
-    <div class="carousel-item">
-      <img class="d-block w-100" src="https://images.pexels.com/photos/301584/pexels-photo-301584.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" alt="Third slide">
-    </div>
-  </div>
-  <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
-    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span class="sr-only">Previous</span>
-  </a>
-  <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="sr-only">Next</span>
-  </a>
-</div>
-
-<form>
-
-<div class="form-group row">
-    <label for="inputfirstname" class="col-sm-2 col-form-label">First Name</label>
-    <div class="col-sm-10">
-      <input type="firstname" class="form-control" id="inputfirstname" placeholder="First_Name">
-    </div>
-  </div>
-  <div class="form-group row">
-    <label for="inputlastname" class="col-sm-2 col-form-label">Last Name</label>
-    <div class="col-sm-10">
-      <input type="lastname" class="form-control" id="inputlastname" placeholder="Last_Name">
-    </div>
-  </div>
-<div class="form-group row">
-    <label for="inputbirthday" class="col-sm-2 col-form-label">Birthday</label>
-    <div class="col-sm-10">
-      <input type="birthday" class="form-control" id="inputbirthday" placeholder="Your Birthday">
-    </div>
-  </div>
-
-  <div class="form-group row">
-    <label for="inputcarlicence" class="col-sm-2 col-form-label">Car Licence</label>
-    <div class="col-sm-10">
-      <input type="carlicence" class="form-control" id="inputcarlicence" placeholder="Your Car Licence">
-    </div>
-  </div>
-
-<div class="form-group row">
-    <label for="inputadress" class="col-sm-2 col-form-label">Adress</label>
-    <div class="col-sm-10">
-      <input type="adress" class="form-control" id="inputadress" placeholder="Your full adress">
-    </div>
-  </div>
-
-  <div class="form-group row">
-    <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
-    <div class="col-sm-10">
-      <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
-    </div>
-  </div>
-  <div class="form-group row">
-    <label for="inputPassword3" class="col-sm-2 col-form-label">Password</label>
-    <div class="col-sm-10">
-      <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
-    </div>
-  </div>
-  <fieldset class="form-group">
-    <div class="row">
-      <legend class="col-form-label col-sm-2 pt-0">Select your type of vehicle</legend>
+<?php
+  }
+  ?>
+    <div class="form-group row">
+      <label for="user_name" class="col-sm-2 col-form-label">User name</label>
       <div class="col-sm-10">
-        <div class="form-check">
-          <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="option1" checked>
-          <label class="form-check-label" for="gridRadios1">
-            PKW/VAN
-          </label>
-        </div>
-        <div class="form-check">
-          <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="option2">
-          <label class="form-check-label" for="gridRadios2">
-            Truck
-          </label>
-        </div>
-        <div class="form-check">
-          <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios3" value="option3">
-          <label class="form-check-label" for="gridRadios3">
-            Motorcycle
-          </label>
-        </div>
+        <input type="text" class="form-control" name="user_name" placeholder="User name">
+        <span class="text-danger"><?php echo $user_nameError; ?></span>
       </div>
     </div>
-  </fieldset>
-  
-  <div class="form-group row">
-    <div class="col-sm-10">
-      <button type="submit" class="btn btn-primary">Register now</button>
+    <div class="form-group row">
+      <label for="first_name" class="col-sm-2 col-form-label">First Name</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" name="first_name" placeholder="First Name">
+        <span class="text-danger"><?php echo $fnameError; ?></span>
+      </div>
     </div>
-  </div>
-</form>
+    <div class="form-group row">
+      <label for="last_name" class="col-sm-2 col-form-label">Last Name</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" name="last_name" placeholder="Last Name">
+        <span class="text-danger"><?php echo $snameError; ?></span>
+      </div>
+    </div>
+    <div class="form-group row">
+        <label for="birthday" class="col-sm-2 col-form-label">Birthday</label>
+        <div class="col-sm-10">
+          <input type="date" class="form-control" name="birthday" placeholder="Your Birthday">
+          <span class="text-danger"><?php echo $birthdayError; ?></span>
+        </div>
+      </div>
 
-	<?php
-	include("connect.php");
+      <div class="form-group row">
+        <label for="carLicence" class="col-sm-2 col-form-label">Car Licence</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" name="carLicence" placeholder="Your Car Licence">
+          <span class="text-danger"><?php echo $carLicenceError; ?></span>
+        </div>
+      </div>
 
-	function NewDriver() { $fullname = $_POST['name']; $userName = $_POST['user']; $email = $_POST['email']; 
-  $password = $_POST['pass']; 
-  $query = "INSERT INTO websiteusers (fullname,userName,email,pass) VALUES ('$fullname','$userName','$email','$password')"; 
-  $data = mysql_query ($query)or die(mysql_error()); 
-  if($data) { echo "YOUR REGISTRATION IS COMPLETED..."; } } function SignUp() { if(!empty($_POST['user'])) 
+    <div class="form-group row">
+      <label for="address" class="col-sm-2 col-form-label">Adress</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" name="address" placeholder="Your full address">
+        <span class="text-danger"><?php echo $adressError; ?></span>
+      </div>
+    </div>
 
-
-  //checking the 'user' name which is from Sign-Up.html, is it empty or have some text { $query = mysql_query("SELECT * FROM websiteusers WHERE userName = '$_POST[user]' AND pass = '$_POST[pass]'") or die(mysql_error()); if(!$row = mysql_fetch_array($query) or die(mysql_error())) { newuser(); } else { echo "SORRY...YOU ARE ALREADY REGISTERED USER..."; } } } if(isset($_POST['submit'])) { SignUp(); }
-	?>
-
+    <div class="form-group row">
+      <label for="email" class="col-sm-2 col-form-label">Email</label>
+      <div class="col-sm-10">
+        <input type="email" class="form-control" name="email" placeholder="Email">
+        <span class="text-danger"><?php echo $emailError; ?></span>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="password" class="col-sm-2 col-form-label">Password</label>
+      <div class="col-sm-10">
+        <input type="password" class="form-control" name="pass" placeholder="Password">
+        <span class="text-danger"><?php echo $passError; ?></span>
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-sm-12">
+      <button type="submit" class="btn btn-block btn-primary" name="submit-btn">Sign Up</button>
+      </div>
+    </div>
+  </form>
+</div>
+<!-- Include footer + closing html tag -->
+<?php include('footer.php') ?>
 
 </body>
 </html>
+<?php ob_end_flush(); ?>
 

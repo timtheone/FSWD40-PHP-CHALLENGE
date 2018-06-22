@@ -17,3 +17,8 @@ a:hover {
 .white-navbar {
     background-color: white;
 }
+
+#form-heading {
+    padding-top: 30px;
+    padding-bottom: 15px;
+}

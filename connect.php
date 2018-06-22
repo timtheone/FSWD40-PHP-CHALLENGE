@@ -1,18 +1,15 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$database = "rentCar";
-
+define('DBHOST', 'localhost');
+define('DBUSER', 'root');
+define('DBPASS', '');
+define('DBNAME', 'rentCar');
 // Create connection
-$conn = new mysqli($servername, $username, $password, $database);
+$conn = mysqli_connect(DBHOST,DBUSER,DBPASS,DBNAME);
 
-define ('ROOT', 'http://localhost/php_exercises/FSWD40-PHP_CHALLENGE/');
-
+define('ROOT_URL', 'http://localhost/php_exercises/FSWD40-PHP_CHALLENGE/');
 // Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-} 
-echo "";
+if ( !$conn ) {
+    die("Connection failed : " . mysqli_error());
+   }
 ?>
 

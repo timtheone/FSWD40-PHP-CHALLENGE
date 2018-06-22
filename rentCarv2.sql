@@ -255,6 +255,7 @@ ALTER TABLE `car`
 -- Indexes for table `driver`
 --
 ALTER TABLE `driver`
+  CHANGE driver_id driver_id int(11) NOT NULL AUTO_INCREMENT,
   ADD PRIMARY KEY (`driver_id`),
   ADD UNIQUE KEY `user_name` (`user_name`);
 
